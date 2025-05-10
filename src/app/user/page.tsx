@@ -1,35 +1,46 @@
-"use client";
+'use client';
+import { AppSidebar } from '@/components/app-sidebar';
+import { DataTable } from '@/components/data-table';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import data from '@/api/data.json';
 
-import { UserList } from "./UserList";
-import { UserModal } from "./UserModal";
-import { Button } from "@/components/ui/button";
-import { useUserContainer } from "./User.container";
-
-export default function UserPage() {
-  const container = useUserContainer();
-  const {
-    users,
-    selectedUser,
-    modalOpen,
-    addUser,
-    updateUser,
-    openModal,
-    closeModal,
-  } = container;
-
+export default function Page() {
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-semibold">Usuários</h1>
-        <Button onClick={() => openModal()}>Adicionar</Button>
-      </div>
-      <UserList users={users} onEdit={openModal} />
-      <UserModal
-        open={modalOpen}
-        onClose={closeModal}
-        onSave={selectedUser ? updateUser : addUser}
-        user={selectedUser}
-      />
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">Building Your Application</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="@container/main flex flex-1 flex-col gap-2">
+          <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+            <DataTable data={data} />
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
